@@ -1,0 +1,26 @@
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/jquery.cookie/1.4.1/jquery.cookie.min.js"></script>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    {{ static('js','common/js/xtajax.js') }}
+    {{ static('js','common/js/xtalert.js') }}
+    {{ static('js','common/js/xtparam.js') }}
+    {{ static('js','common/js/lib/sweetalert.min.js') }}
+    {{ static('css','common/css/lib/sweetalert.css') }}
+    {{ static('css','common/css/common_base.css') }}
+
+{#     {% assets "cms_js" %}#}
+{#        <script type="text/javascript" src="{{ ASSETS_URL }}"></script>#}
+{#    {% endassets %}#}
+{#    {% assets "common_js" %}#}
+{#        <script type="text/javascript" src="{{ ASSETS_URL }}"></script>#}
+{#    {% endassets %}#}
+{#    {% assets "comon_css" %}#}
+{#        <link rel="stylesheet" href="{{ ASSETS_URL }}" />#}
+{#    {% endassets %}#}
+{#    {% assets "cms_css" %}#}
+{#        <link rel="stylesheet" href="{{ ASSETS_URL }}" />#}
+{#    {% endassets %}#}
+
+

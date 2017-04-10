@@ -1,0 +1,131 @@
+{% extends 'front/front_base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block head %}
+    {{ static('css','front/css/front_postdetail.css') }}
+    {{ static('js','front/js/front_postdetail.js') }}
+{% endblock %}
+
+{% block body %}
+    <div class="container_wrap">
+        <div class="left-container">
+            <div class="post-container">
+                <div class="post-container-inner">
+                    <div class="post-top">
+                        <h2>{{ post.title }}</h2>
+                        <p class="post-info">
+                            <span>发表时间：{{ post.create_time }}</span>
+                            <span>作者：{{ post.author.username }}</span>
+                            <span>所属板块：{{ post.board.name or '无板块' }}</span>
+                            <span class="comment-count">评论数：{{ post.comments | length }}</span>
+                            <span class="read-count">阅读数：{{ post.read_count|default(0) }}</span>
+                        </p>
+                    </div>
+                    <div class="post-content">
+                        {{ post.content|safe }}
+                    </div>
+                    <div class="post_adds">
+                        <div class="star-group">
+                            {% if front_user and front_user.id in star_author_ids %}
+                                <button class="btn btn-default" data-post-id="{{ post.id }}" id="star-btn" data-is-star="1" data-is-login="1">
+                                    <i class="glyphicon glyphicon-thumbs-up active"></i>
+                                    <h10 id="vote_total">{{ post.stars | length }}</h10>已赞
+                                </button>
+
+                            {% else %}
+                                <button class="btn btn-default" data-post-id="{{ post.id }}" id="star-btn" data-is-star="0" data-is-login="{% if front_user %}1{% else %}0{% endif %}">
+                                    <i class="glyphicon glyphicon-thumbs-up"></i>
+                                    <h10 id="vote_total">{{ post.stars | length }}</h10> 赞
+                                </button>
+                            {% endif %}
+                            <div class="avatar-star-group">
+                                {% for star in post.stars %}
+                                    <a href="#">
+                                        {{ img_static('front/images/logo.jpg', '', 'avatar-star') }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="comment-btn-group">
+                            <a href="#post-comment" class="btn btn-default"><i class="glyphicon glyphicon-comment"></i>发表评论</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="post-comment">
+                <h3>发表评论</h3>
+                <form action="" method="POST" id="comment-form">
+                    {% include 'common/common_editor.html' %}
+{#                    <div class="form-group">#}
+{#                        <textarea class="form-control comment-content" name="comment-content" id="comment-content" cols="30" rows="4" placeholder="请写下你评论"></textarea>#}
+{#                    </div>#}
+                    <div class="form-group">
+                        <button id="submit-btn" class="btn btn-danger btn-submit" data-post-id="{{ post.id }}">提交评论</button>
+                        <a rel="nofollow" class="btn btn-default btn-cancel-reply" id="cancel-comment-reply" data-post-id="{{ post.id }}" href="{{ url_for('post.add_comment') }}">取消回复</a>
+                    </div>
+                </form>
+            </div>
+            <div class="comment-list-group">
+                <div class="comment-list-group-inner">
+                    <div class="comment-title">
+                        <p>评论列表</p>
+                    </div>
+                    <ul class="comment-list">
+                        {% for comment in post.comments %}
+                            {% if not comment %}
+                                <li>暂无评论</li>
+                            {% else %}
+                                <li>
+                                <div class="comment-img">
+                                    <a href="{{ url_for('account.profile',user_id=comment.author.id) }}">
+                                        <img class="user-head" src="{{ comment.author.avatar }}" alt="">
+                                    </a>
+                                </div>
+                                <div class="comment-content">
+                                    <p class="author-info">
+                                        <span>{{ comment.author.username }}</span>
+                                        <span>{{ comment.create_time }}</span>
+                                    </p>
+                                    <p class="comment-txt">{{ comment.content|safe }}</p>
+                                    <div class="comment-btn">
+                                        <span class="star-btn" data-post-id="{{ post.id }}" id="star-btn">
+                                            <i class="glyphicon glyphicon-thumbs-up"></i>
+                                            <h10 id="vote_total">{{ star_count }}</h10>
+                                        </span>
+                                        <a href="#reply-comment" class="reply-btn" data-post-id="{{ post.id }}">
+                                            <i class="glyphicon glyphicon-share-alt"></i>回复
+                                        </a>
+                                        <div class="reply-comment" style="display:none;" id="reply-comment" data-post-id="{{ post.id }}">
+                                            <form action="" class="reply-form">
+                                                <div class="form-group">
+                                                    <textarea class="form-control comment-content" name="comment-content" id="{{ post.id }}" cols="20" rows="4" placeholder="请写下你评论"></textarea>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="right-container">
+            <div class="author-group">
+                <div class="avatar-group">
+                    <a href="{{ url_for('account.profile',user_id=post.author.id) }}">
+                        <img class="avatar-img" src="{{ post.author.avatar }}" alt="">
+{#                        {{ img_static('front/images/logo.jpg','个人中心','avatar-img') }}#}
+                    </a>
+                </div>
+                <p class="username">{{ post.author.username }}</p>
+                <p class="txt">{{ post.author.points }}积分</p>
+                <div class="btn-box">
+                    <a href="{{ url_for('account.profile',user_id=post.author.id) }}" class="btn btn-warning">Ta的主页</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends 'front/front_base.html' %}
+
+{% block title %}
+{% endblock %}
+
+{% block head %}
+    {{ static('css','front/css/iconfont/iconfont.css') }}
+    {{ static('css','front/css/front_index.css') }}
+{% endblock %}
+
+{% block container %}
+    <div class="lg-container">
+        <ul class="top-group">
+            <li {% if c_sort == 1 %} class="current"{% endif %}>
+                <a href="{{ url_for('post.post_list',page=1,sort=1,board_id=c_board) }}">
+                    <div class="icon-group">
+                        <i class="iconfont icon-zuixin"></i>
+                    </div>
+                    <p class="block-title">最新帖子</p>
+                </a>
+            </li>
+            <li {% if c_sort == 2 %} class="current"{% endif %}>
+                <a href="{{ url_for('post.post_list',page=1,sort=2,board_id=c_board) }}">
+                    <div class="icon-group">
+                        <i class="iconfont icon-jinghua"></i>
+                    </div>
+                    <p class="block-title">精华帖子</p>
+                </a>
+            </li>
+            <li {% if c_sort == 3 %} class="current"{% endif %}>
+                <a href="{{ url_for('post.post_list',page=1,sort=3,board_id=c_board) }}">
+                    <div class="icon-group">
+                        <i class="iconfont icon-zhichizuiduoxianti"></i>
+                    </div>
+                    <p class="block-title">点赞最多</p>
+                </a>
+            </li>
+            <li {% if c_sort == 4 %} class="current"{% endif %}>
+                <a href="{{ url_for('post.post_list',page=1,sort=4,board_id=c_board) }}">
+                    <div class="icon-group">
+                        <i class="iconfont icon-appzuixinhuifu"></i>
+                    </div>
+                    <p class="block-title">评论最多</p>
+                </a>
+            </li>
+        </ul>
+        <div class="post-list-container outer-border white-bg">
+            <div class="post-con">
+                <ul class="post-list">
+                    {% for post in posts %}
+                        <li>
+                            <div class="post-list-img">
+                                <a href="#">
+                                    {{ img_static('front/images/logo.jpg') }}
+                                </a>
+                            </div>
+                            <div class="post-list-con">
+                                <div class="title">
+                                    <a class="title_name" href="{{ url_for('post.post_detail',post_id=post.id) }}">
+                                        {{ post.title }}
+                                        {% if post.highlight %}
+                                            <span class="label label-danger">精</span>
+                                        {% endif %}
+                                    </a>
+                                </div>
+                                <div class="auth-msg">
+                                    <a href="#" class="user_name">{{ post.author.username }}</a>
+                                    <span class="time">{{ post.create_time }}</span>
+                                    <span class="comment-count">评论：暂无</span>
+                                    <span class="read-count">阅读：{{ post.read_count }}</span>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% if t_page >1 %}
+            <div class="page-nav">
+                <nav aria-label="...">
+                    <ul class="pagination">
+                        {% if c_page <= 1 %}
+                            <li class="disabled"><span>&laquo;</span></li>
+                            <li class="disabled"><span>&lt;</span></li>
+                        {% elif c_page <= 5 %}
+                            <li class="disabled"><span>&laquo;</span></li>
+                            <li><a href="{{ url_for('post.post_list',page=c_page-5, sort=c_sort, board_id = c_board) }}">&lt;</a></li>
+                        {% else %}
+                            <li><a href="{{ url_for('post.post_list',page=c_page-1, sort=c_sort, board_id = c_board) }}">&laquo;</a></li>
+                            <li><a href="{{ url_for('post.post_list',page=c_page-5, sort=c_sort, board_id = c_board) }}">&lt;</a></li>
+                        {% endif %}
+
+                        {% for page in pages %}
+                            {% if c_page == page %}
+                                <li class="active"><span>{{ page }}</span></li>
+                            {% else %}
+                                <li><a href="{{ url_for('post.post_list',page=page, sort=c_sort, board_id = c_board) }}">{{ page }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <li><a href="{{ url_for('post.post_list',page=c_page + 1, sort=c_sort, board_id = c_board)}}">……</a></li>
+                        <li><a href="{{ url_for('post.post_list',page=t_page, sort=c_sort, board_id = c_board)}}">{{ t_page }}</a></li>
+                        <li><span>共{{ t_page }}页</span></li>
+
+                        {% if c_page >= t_page %}
+                            <li class="disabled"><span>&gt;</span></li>
+                            <li class="disabled"><span>&raquo;</span></li>
+                        {% elif c_page >= t_page-5 %}
+                            <li><a href="{{ url_for('post.post_list',page=c_page + 1, sort=c_sort, board_id = c_board)}}">&gt;</a></li>
+                            <li class="disabled"><span>&raquo;</span></li>
+                        {% else %}
+                            <li><a href="{{ url_for('post.post_list',page=c_page + 1, sort=c_sort, board_id = c_board)}}">&gt;</a></li>
+                            <li><a href="{{ url_for('post.post_list',page=c_page + 5, sort=c_sort, board_id = c_board)}}">&raquo;</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+        </div>
+        {% endif %}
+    </div>
+    <div class="sm-container">
+        <div class="add-post-group">
+            <a href="{{ url_for('post.add_post') }}" class="btn btn-danger btn-block">发表新帖子</a>
+        </div>
+        <div class="list-group">
+            <span class="list-group-item header">板块</span>
+            <a href="{{ url_for('post.post_list',page=1,sort=c_sort,board_id=0) }}"
+                {% if c_board==0 %}
+                    class="list-group-item active"
+                {% else %}
+                    class="list-group-item"
+                {% endif %}>所有板块
+            </a>
+            {% for board in boards %}
+                <a href="{{ url_for('post.post_list',page=1,sort=c_sort,board_id=board.id) }}"
+                    {% if c_board==board.id %}
+                        class="list-group-item active"
+                    {% else %}
+                        class="list-group-item"
+                    {% endif %}>
+                    {{ board.name }}
+{#                    要在这里使用filter方法必须将它转化为Query对象，在数据库中将lazy的值改为dynamic#}
+                    <span class="badge">{{ board.posts.filter_by(is_removed=False).count() }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

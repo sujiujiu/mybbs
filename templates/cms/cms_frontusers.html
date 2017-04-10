@@ -1,0 +1,58 @@
+{% extends 'cms/cms_base.html' %}
+
+{% block title %}
+    前台用户管理
+{% endblock %}
+
+{% block page_title %}
+    {{ self.title() }}
+{% endblock %}
+
+{% block head %}
+    {{ static('js','common/js/xtparam.js') }}
+    {{ static('js','cms/js/cms_frontusers.js') }}
+{% endblock %}
+
+{% block main_content %}
+    <div class="top-box">
+        <label>排序：</label>
+        <select class="sort-select">
+            <option value="1" {% if current_sort=='1' %}selected{% endif %}>按加入时间排序</option>
+            <option value="2" {% if current_sort=='2' %}selected{% endif %}>按帖子量排序</option>
+            <option value="3" {% if current_sort=='3' %}selected{% endif %}>按评论量排序</option>
+        </select>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <th>用户名</th>
+            <th>手机号码</th>
+            <th>加入时间</th>
+            <th>发表帖子数</th>
+            <th>评论数</th>
+            <th>状态</th>
+            <th>操作</th>
+        </thead>
+        <tbody>
+            {% for front_user in front_users %}
+                <tr>
+                    <td>{{ front_user.username }}</td>
+                    <td>{{ front_user.telephone }}</td>
+                    <td>{{ front_user.join_time }}</td>
+                    <td>{{ front_user.posts | length }}</td>
+                    <td>{{ front_user.comments.count() }}</td>
+                    <td>
+                        {% if front_user.is_active %}
+                            <span class="label label-success">可用</span>
+                        {% else %}
+                            <span class="label label-danger">已禁用</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('cms.edit_front_user',id=front_user.id) }}" class="btn btn-primary btn-xs">编辑</a>
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+{% endblock %}

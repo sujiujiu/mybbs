@@ -1,0 +1,26 @@
+{% from 'common/common_macros.html' import static,img_static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    {% include 'common/common_head.html' %}
+    {{ static( 'css', 'front/css/front_sign_base.css') }}
+    {{ static('js','common/js/xtparam.js') }}
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="outer-box">
+        <div class="logo-box">
+            <a href="/">{{ img_static('front/images/logo.jpg','首页') }}</a>
+        </div>
+        <h2 style="text-align: center;">{% block page_title %}{% endblock %}</h2>
+        <div class="sign-group">
+            <form action="" method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                {% block sign_group %}{% endblock %}
+            </form>
+        </div>
+    </div>
+</body>
+</html>

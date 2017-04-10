@@ -1,0 +1,40 @@
+{% extends 'cms/cms_base.html' %}
+
+{% block title %}评论管理{% endblock %}
+
+{% block head %}
+    <style>
+        .origin-comment-group{
+            background: #fafafa;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .panel-footer{
+            text-align: right;
+        }
+    </style>
+    {{ static('js', 'cms/js/cms_comments.js') }}
+{% endblock %}
+
+{% block page_title %}
+    {{ self.title() }}
+{% endblock %}
+
+{% block main_content %}
+    {% for comment in comments %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                帖子：<a href="{{ url_for('post.post_detail',post_id=comment.post.id) }}">{{ comment.post.title }}</a>
+            </div>
+            <div class="panel-body">
+                {% if comment.origin_comment %}
+                    <div class="origin-comment-group">回复{{ comment.origin_comment.author.username }}：{{ comment.origin_comment.content|safe }}</div>
+                {% endif %}
+                <p>{{ comment.content|safe }}</p>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-primary btn-xs remove-btn" data-comment-id="{{ comment.id }}">移除</button>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

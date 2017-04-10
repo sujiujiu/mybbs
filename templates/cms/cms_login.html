@@ -1,0 +1,47 @@
+{% from 'common/common_macros.html' import static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>登录</title>
+        {% include 'common/common_head.html' %}
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]><![endif]-->
+          <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+          <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+  </head>
+
+<body>
+    <div class="container col-md-offset-4 col-sm-offset-3 col-md-4 col-sm-6 form-group-lg">
+        <form class="form-horizontal" method="post" action="">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <h2 class="form-signin-heading">登录</h2>
+            <div class="form-group">
+                <label for="inputEmail" class="col-sm-2 control-label sr-only">邮箱</label>
+                <input type="email" class="form-control" id="inputEmail" name="email" placeholder="邮箱" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword" class="col-sm-2 control-label sr-only">密码</label>
+                <input type="password" class="form-control" id="inputPassword"  name="password" placeholder="不少于6位" required autofocus>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="1" name="remember"> 记住我
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-lg btn-primary btn-block" type="submit" id="login_submit">登录</button>
+            </div>
+            {% if message %}
+                <div class="form-group">
+                    <p class="text-danger error-info">{{ message }}</p>
+                </div>
+            {% endif %}
+            <input type=hidden value="{{ next or '' }}" name=next>
+        </form>
+    </div>
+
+</body>
+</html>

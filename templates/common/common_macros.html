@@ -1,0 +1,18 @@
+
+{#{% macro static(filename) %}#}
+{#    {{ url_for('static',filename=filename) }}#}
+{#{% endmacro %}#}
+
+
+{% macro static(type,filename) %}
+    {% if type == 'css' %}
+        <link rel="stylesheet" href="{{ url_for('static',filename=filename) }}">
+    {% elif type == 'js' %}
+        <script src="{{ url_for('static',filename=filename) }}"></script>
+    {% endif %}
+{% endmacro %}
+
+{% macro img_static(filename, alt, class) %}
+    <img src="{{ url_for('static',filename=filename) }}" alt="{{ alt }}" class="{{ class }}">
+{% endmacro %}
+

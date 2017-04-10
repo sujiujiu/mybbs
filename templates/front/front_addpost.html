@@ -1,0 +1,44 @@
+{% extends 'front/front_base.html' %}
+
+{% block title %}
+    发表新帖子
+{% endblock %}
+
+{% block head %}
+    {{ static('css', 'front/css/front_addpost.css') }}
+    {{ static('js', 'front/js/front_addpost.js') }}
+    {{ static('js', 'front/js/front_captcha.js') }}
+{% endblock %}
+
+{% block container %}
+    <form action="" method="POST">
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">标题</span>
+                <input type="text" name="title" class="form-control" placeholder="请输入标题">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">板块</span>
+                <select class="form-control board-select">
+                    {% for board in boards %}
+                        <option value="{{ board.id }}">{{ board.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        {% include 'common/common_editor.html' %}
+        <div class="form-group">
+            <div class="input-group captcha-group">
+                <input type="text" name="graph_captcha" class="form-control">
+                <span class="input-group-addon" id="graph-captcha-btn">
+                    <img src="{{ url_for('account.graph_captcha') }}" alt="">
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-danger" id="submit">发布帖子</button>
+        </div>
+    </form>
+{% endblock %}

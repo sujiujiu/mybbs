@@ -1,0 +1,49 @@
+{% extends 'front/front_sign_base.html' %}
+
+{% block title %}
+    注册潭州Python论坛帐号
+{% endblock %}
+
+{% block page_title %}
+    {{ self.title() }}
+{% endblock %}
+
+{% block head %}
+    {{ static('js', 'front/js/front_regist.js') }}
+    {{ static('js', 'front/js/front_captcha.js') }}
+{% endblock %}
+
+{% block sign_group %}
+<div class="form-group">
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="手机号码" name="telephone" value="{{ telephone }}">
+        <span class="input-group-addon" id="send-captcha-btn">发送验证码</span>
+    </div>
+</div>
+<div class="form-group">
+    <input type="text" class="form-control" placeholder="短信验证码" name="sms_captcha">
+</div>
+<div class="form-group">
+    <input type="text" class="form-control" name="username" placeholder="用户名" value="{{ username }}">
+</div>
+<div class="form-group">
+    <input type="password" class="form-control" name="password" placeholder="密码">
+</div>
+<div class="form-group">
+    <input type="password" class="form-control" name="password_repeat" placeholder="确认密码">
+</div>
+<div class="form-group">
+    <div class="input-group">
+        <input type="text" class="form-control" name="graph_captcha" placeholder="图形验证码">
+        <span class="input-group-addon captcha-addon" id="graph-captcha-btn">
+            <img src="{{ url_for('account.graph_captcha') }}" alt="验证码" class="captcha-img">
+        </span>
+    </div>
+</div>
+<div class="form-group">
+    <button class="btn btn-danger btn-block">立即注册</button>
+</div>
+{% if message %}
+    <p class="text-danger" style="text-align: center">{{ message }}</p>
+{% endif %}
+{% endblock %}
