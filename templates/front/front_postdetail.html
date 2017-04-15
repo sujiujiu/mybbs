@@ -41,8 +41,8 @@
                             {% endif %}
                             <div class="avatar-star-group">
                                 {% for star in post.stars %}
-                                    <a href="#">
-                                        {{ img_static('front/images/logo.jpg', '', 'avatar-star') }}
+                                    <a href="{{ url_for('account.profile',user_id=star.post.author.id) }}">
+                                        <img src="{{ star.post.author.avatar }}" class="avatar-star" alt="">
                                     </a>
                                 {% endfor %}
                             </div>
@@ -87,22 +87,34 @@
                                         <span>{{ comment.author.username }}</span>
                                         <span>{{ comment.create_time }}</span>
                                     </p>
+                                    {% if comment.origin_comment %}
+                                        <div class="origin-comment-group">
+                                            <blockquote>
+                                                {{ comment.origin_comment.author.username}} 发表于 {{ comment.origin_comment.create_time }}
+                                                <p>{{ comment.origin_comment.content|safe }}</p>
+                                            </blockquote>
+                                        </div>
+                                    {% endif %}
                                     <p class="comment-txt">{{ comment.content|safe }}</p>
                                     <div class="comment-btn">
-                                        <span class="star-btn" data-post-id="{{ post.id }}" id="star-btn">
-                                            <i class="glyphicon glyphicon-thumbs-up"></i>
-                                            <h10 id="vote_total">{{ star_count }}</h10>
-                                        </span>
-                                        <a href="#reply-comment" class="reply-btn" data-post-id="{{ post.id }}">
+                                        <a href="#" class="reply-btn" data-comment-id="{{ comment.id }}">
                                             <i class="glyphicon glyphicon-share-alt"></i>回复
                                         </a>
-                                        <div class="reply-comment" style="display:none;" id="reply-comment" data-post-id="{{ post.id }}">
-                                            <form action="" class="reply-form">
-                                                <div class="form-group">
-                                                    <textarea class="form-control comment-content" name="comment-content" id="{{ post.id }}" cols="20" rows="4" placeholder="请写下你评论"></textarea>
-                                                </div>
-                                            </form>
-                                        </div>
+                                        <button class="btn-link star-btn" data-comment-id="{{ comment.id }}" >
+                                            <i class="glyphicon glyphicon-thumbs-up"></i>
+                                            <h10 id="vote_total">{{ comment.stars | length }}</h10>
+                                        </button>
+                                    </div>
+                                    <div class="reply-comment" style="display:none;" >
+                                        <form action="" class="reply-form">
+                                            <div class="form-group">
+                                                <textarea class="form-control comment-content" name="comment-content" data-comment-id="{{ comment.id }}" cols="20" rows="4" placeholder="请写下你评论"></textarea>
+                                                <div style="clear:both"></div>
+                                            </div>
+                                            <div class="form-group reply-btn-">
+                                                <button class="btn btn-default reply-submit" data-comment-id="{{ comment.id }}">提交回复</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </li>
@@ -117,7 +129,6 @@
                 <div class="avatar-group">
                     <a href="{{ url_for('account.profile',user_id=post.author.id) }}">
                         <img class="avatar-img" src="{{ post.author.avatar }}" alt="">
-{#                        {{ img_static('front/images/logo.jpg','个人中心','avatar-img') }}#}
                     </a>
                 </div>
                 <p class="username">{{ post.author.username }}</p>

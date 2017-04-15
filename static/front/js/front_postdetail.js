@@ -113,12 +113,51 @@ $(function () {
     });
 });
 
-// 回复评论
+// 点击回复显示评论框
 $(function () {
-    var btn = $('.reply-btn');
-    btn.css('display','inherit');
-    btn.click(function () {
-         $('.reply-comment').show();
+    $('.reply-btn').click(function (event) {
+        event.preventDefault();
+        var self = $(this);
+        $('.reply-comment').eq(self.index()).show();
+
      });
 });
 
+
+// 回复评论
+$(function () {
+    $('.reply-submit').click(function (event) {
+        event.preventDefault();
+
+        var self = $(this);
+        var commentInput = $('.comment-content').eq(self.index());
+        console.log(self.index());
+        var comment_id = $('.origin-comment-group').attr('data-comment-id');
+        var content = commentInput.val();
+
+        xtajax.post({
+            'url': '/reply/',
+            'data': {
+                'comment_id': comment_id,
+                'content': content
+            },
+            'success': function (data) {
+                if(data['code'] == 200){
+                    if(comment.length !=0){
+                        xtalert.alertSuccessToast('恭喜！评论成功！');
+                        setTimeout(function () {
+                            window.location = '/post_detail/'+post_id+'/';
+                            commentInput.val('');
+                            window.location.reload();
+                        },500);
+                    }else{
+                        xtalert.alertInfoToast('内容不能为空！')
+                    }
+                }else{
+                    xtalert.alertInfoToast(data['message']);
+                }
+            }
+        });
+
+     });
+});

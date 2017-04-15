@@ -1,7 +1,7 @@
 
-{#{% macro static(filename) %}#}
-{#    {{ url_for('static',filename=filename) }}#}
-{#{% endmacro %}#}
+{% macro i_static(filename) %}
+    {{ url_for('static',filename=filename) }}
+{% endmacro %}
 
 
 {% macro static(type,filename) %}

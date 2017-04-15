@@ -50,8 +50,8 @@
                     {% for post in posts %}
                         <li>
                             <div class="post-list-img">
-                                <a href="#">
-                                    {{ img_static('front/images/logo.jpg') }}
+                                <a href="{{ url_for('account.profile', user_id=post.author.id) }}">
+                                    <img src="{{ post.author.avatar or i_static('front/images/logo.jpg')}}" alt="">
                                 </a>
                             </div>
                             <div class="post-list-con">
@@ -65,8 +65,8 @@
                                 </div>
                                 <div class="auth-msg">
                                     <a href="#" class="user_name">{{ post.author.username }}</a>
-                                    <span class="time">{{ post.create_time }}</span>
-                                    <span class="comment-count">评论：暂无</span>
+                                    <span class="time">{{ post.create_time | haddle_time}}</span>
+                                    <span class="comment-count">评论：{{ post.comments | length }}</span>
                                     <span class="read-count">阅读：{{ post.read_count }}</span>
                                 </div>
                             </div>

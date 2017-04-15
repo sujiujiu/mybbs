@@ -77,9 +77,6 @@ class CommentModel(db.Model):
     #     self.post = post
     #     self.origin_comment = origin_comment
 
-    # @classmethod
-    # def comment_page(cls, page):
-    #
 
 
 # 点赞

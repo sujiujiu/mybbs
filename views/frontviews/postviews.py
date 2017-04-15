@@ -7,7 +7,7 @@ import constants
 from models.frontmodels import FrontUser
 from models.commonmodels import BoardModel, PostModel, CommentModel, PostStarModel
 from models.basemodels import PostModelHelper
-from forms.commonforms import AddPostForm, AddCommentForm, PostStarForm
+from forms.commonforms import AddPostForm, AddCommentForm, PostStarForm, ReplyCommentForm
 from utils import xtjson
 import qiniu
 from time import sleep
@@ -80,23 +80,62 @@ def post_detail(post_id):
 def add_comment():
     if flask.request.method == 'GET':
         post_id = flask.request.args.get('post_id',type=int)
-        comment_id = flask.request.args.get('post_id',type=int)
         post = PostModel.query.get(post_id)
-        comment_model = CommentModel.query.filter(post.id == post_id).order_by(PostModel.create_time.desc()).all()
+        # comment_id = flask.request.args.get('comment_id', type=int)
         context = {
             'post': post,
-            'comment': comment_model
+            # 'comment': comment_model
         }
+        # if comment_id:
+        #     context['origin_comment'] = CommentModel.query.get(comment_id)
         return render_template('front/front_postdetail.html', **context)
     else:
         form = AddCommentForm(flask.request.form)
         if form.validate():
             post_id = form.post_id.data
             content = form.content.data
+            # comment_id = form.comment_id.data
             comment_model = CommentModel(content=content)
             post_model = PostModel.query.get(post_id)
             comment_model.post = post_model
             comment_model.author = flask.g.front_user
+            # if comment_id:
+            #     origin_comment = CommentModel.query.filter_by(id=comment_id).first()
+            #     comment_model.origin_comment = origin_comment
+            db.session.add(comment_model)
+            db.session.commit()
+            return xtjson.json_result()
+        else:
+            return xtjson.json_params_error(message=form.get_error())
+
+
+# 回复评论
+@bp.route('/reply/',methods=['GET', 'POST'])
+def reply():
+    if flask.request.method == 'GET':
+        post_id = flask.request.args.get('post_id', type=int)
+        post = PostModel.query.get(post_id)
+        comment_id = flask.request.args.get('comment_id', type=int)
+        context = {
+            'post': post,
+            # 'comment': comment_model
+        }
+        if comment_id:
+            context['origin_comment'] = CommentModel.query.get(comment_id)
+        return render_template('front/front_postdetail.html', **context)
+    else:
+        form = ReplyCommentForm(flask.request.form)
+        if form.validate():
+            post_id = form.post_id.data
+            content = form.content.data
+            comment_id = form.comment_id.data
+            comment_model = CommentModel(content=content)
+            post_model = PostModel.query.get(post_id)
+            comment_model.post = post_model
+            comment_model.author = flask.g.front_user
+            if comment_id:
+                origin_comment = CommentModel.query.get(comment_id)
+                comment_model.origin_comment = origin_comment
             db.session.add(comment_model)
             db.session.commit()
             return xtjson.json_result()

@@ -8,7 +8,12 @@
         <li>用户名：{{ current_user.username }}</li>
         <li>
             邮箱：
-            {% if not current_user.id or current_user.id != front_user.id %}
+            {% if not user_id or current_user.id != user_id %}
+                [隐藏]
+            {% else %}
+                {{ current_user.email or '未填写' }}
+            {% endif %}
+            {% if not user_id or current_user.id != user_id %}
                 [隐藏]
             {% else %}
                 {{ current_user.email or '未填写' }}
@@ -16,14 +21,14 @@
         </li>
         <li>
             QQ：
-            {% if not current_user.id or current_user.id != front_user.id %}
+            {% if not user_id or current_user.id != user_id %}
                 [隐藏]
             {% else %}
                 {{ current_user.qq or '未填写' }}
             {% endif %}
         </li>
         <li>真实姓名：
-            {% if not current_user.id or current_user.id != front_user.id %}
+            {% if not user_id or current_user.id != user_id %}
                 [隐藏]
             {% else %}
                 {{ current_user.realname or '未填写' }}
